@@ -11,6 +11,12 @@ from linebot.v3.messaging import (
     MessagingApi,
     ReplyMessageRequest,
     TextMessage,
+    Emoji, #L7
+    VideoMessage,
+    AudioMessage,
+    LocationMessage,
+    StickerMessage,
+    ImageMessage, #L7
     QuickReply, #
     QuickReplyItem, #
     PostbackAction,
