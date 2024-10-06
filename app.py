@@ -17,14 +17,14 @@ from linebot.v3.messaging import (
     LocationMessage,
     StickerMessage,
     ImageMessage, #L7
-    QuickReply, #
-    QuickReplyItem, #
+    QuickReply, #L11
+    QuickReplyItem,
     PostbackAction,
     MessageAction,
     DatetimePickerAction,
     CameraAction,
     CameraRollAction,
-    LocationAction
+    LocationAction #L11
 )
 from linebot.v3.webhooks import (
     MessageEvent,
@@ -65,6 +65,84 @@ def handle_message(event):
     
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
+
+        if text == 'quick_reply':
+            postback_icon = request.url_root + 'static/postback.png'
+            postback_icon = postback_icon.replace("http", "https")
+            message_icon = request.url_root + 'static/message.png'
+            message_icon = message_icon.replace("http", "https")
+            datetime_icon = request.url_root + 'static/calendar.png'
+            datetime_icon = datetime_icon.replace("http", "https")
+            date_icon = request.url_root + 'static/calendar.png'
+            date_icon = date_icon.replace("http", "https")
+            time_icon = request.url_root + 'static/time.png'
+            time_icon = time_icon.replace("http", "https")
+
+            quickReply = QuickReply(
+                items=[
+                    QuickReplyItem(
+                        action=PostbackAction(
+                            label="Postback",
+                            data="postback",
+                            display_text="postback"
+                        ),
+                        image_url=postback_icon
+                    ),
+                    QuickReplyItem(
+                        action=MessageAction(
+                            label="Message",
+                            text="message"
+                        ),
+                        image_url=message_icon
+                    ),
+                    QuickReplyItem(
+                        action=DatetimePickerAction(
+                            label="Date",
+                            data="date",
+                            mode="date"
+                        ),
+                        image_url=date_icon
+                    ),
+                    QuickReplyItem(
+                        action=DatetimePickerAction(
+                            label="Time",
+                            data="time",
+                            mode="time"
+                        ),
+                        image_url=time_icon
+                    ),
+                    QuickReplyItem(
+                        action=DatetimePickerAction(
+                            label="Datetime",
+                            data="datetime",
+                            mode="datetime",
+                            initial="2024-01-01T00:00",
+                            max="2025-01-01T00:00",
+                            min="2023-01-01T00:00"
+                        ),
+                        image_url=datetime_icon
+                    ),
+                    QuickReplyItem(
+                        action=CameraAction(label="Camera")
+                    ),
+                    QuickReplyItem(
+                        action=CameraRollAction(label="Camera Roll")
+                    ),
+                    QuickReplyItem(
+                        action=LocationAction(label="Location")
+                    )
+                ]
+            )
+            
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[TextMessage(
+                        text='請選擇項目',
+                        quick_reply=quickReply
+                    )]
+                )
+            )
         
         if text == '文字':
             line_bot_api.reply_message(
@@ -96,6 +174,43 @@ def handle_message(event):
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
                     messages=[TextMessage(text=event.message.text)]
+                )
+            )
+
+@line_handler.add(PostbackEvent)
+def handle_postback(event):
+    with ApiClient(configuration) as api_client:
+        line_bot_api = MessagingApi(api_client)
+        postback_data = event.postback.data
+        if postback_data == 'postback':
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[TextMessage(text='Postback')]
+                )
+            )
+        elif postback_data == 'date':
+            date = event.postback.params['date']
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[TextMessage(text=date)]
+                )
+            )
+        elif postback_data == 'time':
+            time = event.postback.params['time']
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[TextMessage(text=time)]
+                )
+            )
+        elif postback_data == 'datetime':
+            datetime = event.postback.params['datetime']
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[TextMessage(text=datetime)]
                 )
             )
 
