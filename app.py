@@ -71,29 +71,7 @@ def handle_message(event):
 
             quickReply = QuickReply(
                 items=[
-                    QuickReplyItem(
-                        action=PostbackAction(
-                            label="Postback",
-                            data="postback",
-                            display_text="postback"
-                        ),
-                        image_url=postback_icon
-                    ),
-                    QuickReplyItem(
-                        action=MessageAction(
-                            label="Message",
-                            text="message"
-                        ),
-                        image_url=message_icon
-                    ),
-                    QuickReplyItem(
-                        action=DatetimePickerAction(
-                            label="Date",
-                            data="date",
-                            mode="date"
-                        ),
-                        image_url=date_icon
-                    ),
+                    
                     QuickReplyItem(
                         action=DatetimePickerAction(
                             label="Time",
@@ -112,15 +90,6 @@ def handle_message(event):
                             min="2023-01-01T00:00"
                         ),
                         image_url=datetime_icon
-                    ),
-                    QuickReplyItem(
-                        action=CameraAction(label="Camera")
-                    ),
-                    QuickReplyItem(
-                        action=CameraRollAction(label="Camera Roll")
-                    ),
-                    QuickReplyItem(
-                        action=LocationAction(label="Location")
                     )
                 ]
             )
@@ -140,30 +109,7 @@ def handle_postback(event):
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
         postback_data = event.postback.data
-        if postback_data == 'postback':
-            line_bot_api.reply_message(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[TextMessage(text='Postback')]
-                )
-            )
-        elif postback_data == 'date':
-            date = event.postback.params['date']
-            line_bot_api.reply_message(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[TextMessage(text=date)]
-                )
-            )
-        elif postback_data == 'time':
-            time = event.postback.params['time']
-            line_bot_api.reply_message(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[TextMessage(text=time)]
-                )
-            )
-        elif postback_data == 'datetime':
+        if postback_data == 'datetime':
             datetime = event.postback.params['datetime']
             line_bot_api.reply_message(
                 ReplyMessageRequest(
