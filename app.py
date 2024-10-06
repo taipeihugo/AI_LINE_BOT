@@ -67,6 +67,24 @@ def handle_message(event):
                     messages=[TextMessage(text="這是文字訊息")]
                 )
             )
+        elif text == '表情符號':
+            emojis = [
+                Emoji(index=0, product_id="5ac1bfd5040ab15980c9b435", emoji_id="001"),
+                Emoji(index=12, product_id="5ac1bfd5040ab15980c9b435", emoji_id="002")
+            ]
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[TextMessage(text='$ LINE 表情符號 $', emojis=emojis)]
+                )
+            )
+        elif text == '貼圖':
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[StickerMessage(package_id="446", sticker_id="1988")]
+                )
+            )
         else:
             line_bot_api.reply_message(
                 ReplyMessageRequest(
