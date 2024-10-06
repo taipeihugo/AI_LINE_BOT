@@ -17,6 +17,11 @@ from linebot.v3.messaging import (
     LocationMessage,
     StickerMessage,
     ImageMessage, #L7
+    TemplateMessage, #L8
+    ConfirmTemplate,
+    ButtonsTemplate,
+    CarouselTemplate,
+    CarouselColumn, #L8
     QuickReply, #L11
     QuickReplyItem,
     PostbackAction,
@@ -66,85 +71,96 @@ def handle_message(event):
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
 
-        if text == 'quick_reply':
-            postback_icon = request.url_root + 'static/postback.png'
-            postback_icon = postback_icon.replace("http", "https")
-            message_icon = request.url_root + 'static/message.png'
-            message_icon = message_icon.replace("http", "https")
-            datetime_icon = request.url_root + 'static/calendar.png'
-            datetime_icon = datetime_icon.replace("http", "https")
-            date_icon = request.url_root + 'static/calendar.png'
-            date_icon = date_icon.replace("http", "https")
-            time_icon = request.url_root + 'static/time.png'
-            time_icon = time_icon.replace("http", "https")
-
-            quickReply = QuickReply(
-                items=[
-                    QuickReplyItem(
-                        action=PostbackAction(
-                            label="Postback",
-                            data="postback",
-                            display_text="postback"
-                        ),
-                        image_url=postback_icon
-                    ),
-                    QuickReplyItem(
-                        action=MessageAction(
-                            label="Message",
-                            text="message"
-                        ),
-                        image_url=message_icon
-                    ),
-                    QuickReplyItem(
-                        action=DatetimePickerAction(
-                            label="Date",
-                            data="date",
-                            mode="date"
-                        ),
-                        image_url=date_icon
-                    ),
-                    QuickReplyItem(
-                        action=DatetimePickerAction(
-                            label="Time",
-                            data="time",
-                            mode="time"
-                        ),
-                        image_url=time_icon
-                    ),
-                    QuickReplyItem(
-                        action=DatetimePickerAction(
-                            label="Datetime",
-                            data="datetime",
-                            mode="datetime",
-                            initial="2024-01-01T00:00",
-                            max="2025-01-01T00:00",
-                            min="2023-01-01T00:00"
-                        ),
-                        image_url=datetime_icon
-                    ),
-                    QuickReplyItem(
-                        action=CameraAction(label="Camera")
-                    ),
-                    QuickReplyItem(
-                        action=CameraRollAction(label="Camera Roll")
-                    ),
-                    QuickReplyItem(
-                        action=LocationAction(label="Location")
-                    )
+        # Confirm Template
+        if text == 'Confirm':
+            confirm_template = ConfirmTemplate(
+                text='今天學程式了嗎?',
+                actions=[
+                    MessageAction(label='是', text='是!'),
+                    MessageAction(label='否', text='否!')
                 ]
             )
-            
+            template_message = TemplateMessage(
+                alt_text='Confirm alt text',
+                template=confirm_template
+            )
             line_bot_api.reply_message(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=[TextMessage(
-                        text='請選擇項目',
-                        quick_reply=quickReply
-                    )]
+                    messages=[template_message]
                 )
             )
-        
-        if text == '文字':
+        # Buttons Template
+        elif text == 'Buttons':
+            url = request.url_root + '/static/Logo.jpg'
+            url = url.replace("http", "https")
+            app.logger.info("url=" + url)
+            buttons_template = ButtonsTemplate(
+                thumbnail_image_url=url,
+                title='示範',
+                text='詳細說明',
+                actions=[
+                    URIAction(label='連結', uri='https://www.facebook.com/NTUEBIGDATAEDU'),
+                    PostbackAction(label='回傳值', data='ping', displayText='傳了'),
+                    MessageAction(label='傳"哈囉"', text='哈囉'),
+                    DatetimePickerAction(label="選擇時間", data="時間", mode="datetime")
+                ]
+            )
+            template_message = TemplateMessage(
+                alt_text="This is a buttons template",
+                template=buttons_template
+            )
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[template_message]
+                )
+            )
+        # Carousel Template
+        elif text == 'Carousel':
+            url = request.url_root + '/static/Logo.jpg'
+            url = url.replace("http", "https")
+            app.logger.info("url=" + url)
+            carousel_template = CarouselTemplate(
+                columns=[
+                    CarouselColumn(
+                        thumbnail_image_url=url,
+                        title='第一項',
+                        text='這是第一項的描述',
+                        actions=[
+                            URIAction(
+                                label='按我前往 Google',
+                                uri='https://www.google.com'
+                            )
+                        ]
+                    ),
+                    CarouselColumn(
+                        thumbnail_image_url=url,
+                        title='第二項',
+                        text='這是第二項的描述',
+                        actions=[
+                            URIAction(
+                                label='按我前往 Yahoo',
+                                uri='https://www.yahoo.com'
+                            )
+                        ]
+                    )
+                ]
+            )
+
+            carousel_message = TemplateMessage(
+                alt_text='這是 Carousel Template',
+                template=carousel_template
+            )
+
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages =[carousel_message]
+                )
+            )
+                
+        elif text == '文字':
             line_bot_api.reply_message(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
@@ -177,42 +193,6 @@ def handle_message(event):
                 )
             )
 
-@line_handler.add(PostbackEvent)
-def handle_postback(event):
-    with ApiClient(configuration) as api_client:
-        line_bot_api = MessagingApi(api_client)
-        postback_data = event.postback.data
-        if postback_data == 'postback':
-            line_bot_api.reply_message(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[TextMessage(text='Postback')]
-                )
-            )
-        elif postback_data == 'date':
-            date = event.postback.params['date']
-            line_bot_api.reply_message(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[TextMessage(text=date)]
-                )
-            )
-        elif postback_data == 'time':
-            time = event.postback.params['time']
-            line_bot_api.reply_message(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[TextMessage(text=time)]
-                )
-            )
-        elif postback_data == 'datetime':
-            datetime = event.postback.params['datetime']
-            line_bot_api.reply_message(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[TextMessage(text=datetime)]
-                )
-            )
 
 
 if __name__ == "__main__":
