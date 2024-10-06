@@ -57,64 +57,134 @@ def handle_message(event):
     text = event.message.text
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
-        if text == 'quick_reply':
-            postback_icon = request.url_root + 'static/postback.png'
-            postback_icon = postback_icon.replace("http", "https")
-            message_icon = request.url_root + 'static/message.png'
-            message_icon = message_icon.replace("http", "https")
-            datetime_icon = request.url_root + 'static/calendar.png'
-            datetime_icon = datetime_icon.replace("http", "https")
-            date_icon = request.url_root + 'static/calendar.png'
-            date_icon = date_icon.replace("http", "https")
-            time_icon = request.url_root + 'static/time.png'
-            time_icon = time_icon.replace("http", "https")
-
-            quickReply = QuickReply(
-                items=[
-                    
-                    QuickReplyItem(
-                        action=DatetimePickerAction(
-                            label="Time",
-                            data="time",
-                            mode="time"
-                        ),
-                        image_url=time_icon
+        # Confirm Template
+        if text == 'Confirm':
+            confirm_template = ConfirmTemplate(
+                text='今天學程式了嗎?',
+                actions=[
+                    MessageAction(label='是', text='是!'),
+                    MessageAction(label='否', text='否!')
+                ]
+            )
+            template_message = TemplateMessage(
+                alt_text='Confirm alt text',
+                template=confirm_template
+            )
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[template_message]
+                )
+            )
+        # Buttons Template
+        elif text == 'Buttons':
+            url = request.url_root + '/static/Logo.jpg'
+            url = url.replace("http", "https")
+            app.logger.info("url=" + url)
+            buttons_template = ButtonsTemplate(
+                thumbnail_image_url=url,
+                title='示範',
+                text='詳細說明',
+                actions=[
+                    URIAction(label='連結', uri='https://www.facebook.com/NTUEBIGDATAEDU'),
+                    PostbackAction(label='回傳值', data='ping', displayText='傳了'),
+                    MessageAction(label='傳"哈囉"', text='哈囉'),
+                    DatetimePickerAction(label="選擇時間", data="時間", mode="datetime")
+                ]
+            )
+            template_message = TemplateMessage(
+                alt_text="This is a buttons template",
+                template=buttons_template
+            )
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[template_message]
+                )
+            )
+        # Carousel Template
+        elif text == 'Carousel':
+            url = request.url_root + '/static/Logo.jpg'
+            url = url.replace("http", "https")
+            app.logger.info("url=" + url)
+            carousel_template = CarouselTemplate(
+                columns=[
+                    CarouselColumn(
+                        thumbnail_image_url=url,
+                        title='第一項',
+                        text='這是第一項的描述',
+                        actions=[
+                            URIAction(
+                                label='按我前往 Google',
+                                uri='https://www.google.com'
+                            )
+                        ]
                     ),
-                    QuickReplyItem(
-                        action=DatetimePickerAction(
-                            label="Datetime",
-                            data="datetime",
-                            mode="datetime",
-                            initial="2024-01-01T00:00",
-                            max="2025-01-01T00:00",
-                            min="2023-01-01T00:00"
-                        ),
-                        image_url=datetime_icon
+                    CarouselColumn(
+                        thumbnail_image_url=url,
+                        title='第二項',
+                        text='這是第二項的描述',
+                        actions=[
+                            URIAction(
+                                label='按我前往 Yahoo',
+                                uri='https://www.yahoo.com'
+                            )
+                        ]
                     )
                 ]
             )
-            
-            line_bot_api.reply_message(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[TextMessage(
-                        text='請選擇項目',
-                        quick_reply=quickReply
-                    )]
-                )
+
+            carousel_message = TemplateMessage(
+                alt_text='這是 Carousel Template',
+                template=carousel_template
             )
 
-@line_handler.add(PostbackEvent)
-def handle_postback(event):
-    with ApiClient(configuration) as api_client:
-        line_bot_api = MessagingApi(api_client)
-        postback_data = event.postback.data
-        if postback_data == 'datetime':
-            datetime = event.postback.params['datetime']
             line_bot_api.reply_message(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=[TextMessage(text=datetime)]
+                    messages =[carousel_message]
+                )
+            )
+        # ImageCarousel Template
+        elif text == 'ImageCarousel':
+            url = request.url_root + '/static'
+            url = url.replace("http", "https")
+            app.logger.info("url=" + url)
+            image_carousel_template = ImageCarouselTemplate(
+                columns=[
+                    ImageCarouselColumn(
+                        image_url=url+'/facebook.png',
+                        action=URIAction(
+                            label='造訪FB',
+                            uri='https://www.facebook.com/NTUEBIGDATAEDU'
+                        )
+                    ),
+                    ImageCarouselColumn(
+                        image_url=url+'/instagram.png',
+                        action=URIAction(
+                            label='造訪IG',
+                            uri='https://instagram.com/ntue.bigdata?igshid=YmMyMTA2M2Y='
+                        )
+                    ),
+                    ImageCarouselColumn(
+                        image_url=url+'/youtube.png',
+                        action=URIAction(
+                            label='造訪YT',
+                            uri='https://www.youtube.com/@bigdatantue'
+                        )
+                    ),
+                ]
+            )
+
+            image_carousel_message = TemplateMessage(
+                alt_text='圖片輪播範本',
+                template=image_carousel_template
+            )
+
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[image_carousel_message]
                 )
             )
 
