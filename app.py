@@ -54,28 +54,15 @@ def callback():
 
 @line_handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
-    text = event.message.text
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
-        # Confirm Template
-        if text == '':
-            confirm_template = ConfirmTemplate(
-                text='今天學程式了嗎?',
-                actions=[
-                    MessageAction(label='是', text='是!'),
-                    MessageAction(label='否', text='否!')
-                ]
+        line_bot_api.reply_message_with_http_info(
+            ReplyMessageRequest(
+                reply_token=event.reply_token,
+                messages=[TextMessage(text=event.message.text)]
             )
-            template_message = TemplateMessage(
-                alt_text='Confirm alt text',
-                template=confirm_template
-            )
-            line_bot_api.reply_message_with_http_info(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[TextMessage(text=event.message.text)]
-                )
-            )
+        )
+
 
 if __name__ == "__main__":
     app.run()
