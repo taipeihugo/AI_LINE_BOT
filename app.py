@@ -54,15 +54,28 @@ def callback():
 
 @line_handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
+
+    text = event.message.text
+    
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
         
-        line_bot_api.reply_message(
-            ReplyMessageRequest(
-                reply_token=event.reply_token,
-                messages=[TextMessage(text=event.message.text)]
+        if text == '位置':
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[
+                        LocationMessage(title='Location', address="Taipei", latitude=25.0475, longitude=121.5173)
+                    ]
+                )
             )
-        )
+        else:
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[TextMessage(text=event.message.text)]
+                )
+            )
 
 
 if __name__ == "__main__":
