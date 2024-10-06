@@ -1,6 +1,6 @@
 from flask import Flask, request, abort
 from linebot.v3 import (
-    Webhookline_handler
+    WebhookHandler
 )
 from linebot.v3.exceptions import (
     InvalidSignatureError
