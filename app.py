@@ -60,13 +60,11 @@ def handle_message(event):
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
         
-        if text == '位置':
+        if text == '文字':
             line_bot_api.reply_message(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=[
-                        LocationMessage(title='Location', address="Taipei", latitude=25.0475, longitude=121.5173)
-                    ]
+                    messages=[TextMessage(text="這是文字訊息")]
                 )
             )
         else:
