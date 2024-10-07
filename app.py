@@ -42,7 +42,33 @@ def handle_message(event):
     text = event.message.text    
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
-        if text == '文字':
+        # Buttons Template
+        if text == 'Buttons':
+            url = request.url_root + '/static/Logo.jpg'
+            url = url.replace("http", "https")
+            app.logger.info("url=" + url)
+            buttons_template = ButtonsTemplate(
+                thumbnail_image_url=url,
+                title='示範',
+                text='詳細說明',
+                actions=[
+                    URIAction(label='連結', uri='https://www.facebook.com/NTUEBIGDATAEDU'),
+                    PostbackAction(label='回傳值', data='ping', displayText='傳了'),
+                    MessageAction(label='傳"哈囉"', text='哈囉'),
+                    DatetimePickerAction(label="選擇時間", data="時間", mode="datetime")
+                ]
+            )
+            template_message = TemplateMessage(
+                alt_text="This is a buttons template",
+                template=buttons_template
+            )
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[template_message]
+                )
+            )
+        elif text == '文字':
             line_bot_api.reply_message(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
