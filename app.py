@@ -43,32 +43,7 @@ def handle_message(event):
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
         # Buttons Template
-        if text == 'Buttons':
-            url = request.url_root + '/static/Logo.jpg'
-            url = url.replace("http", "https")
-            app.logger.info("url=" + url)
-            buttons_template = ButtonsTemplate(
-                thumbnail_image_url=url,
-                title='示範',
-                text='詳細說明',
-                actions=[
-                    URIAction(label='連結', uri='https://www.facebook.com/NTUEBIGDATAEDU'),
-                    PostbackAction(label='回傳值', data='ping', displayText='傳了'),
-                    MessageAction(label='傳"哈囉"', text='哈囉'),
-                    DatetimePickerAction(label="選擇時間", data="時間", mode="datetime")
-                ]
-            )
-            template_message = TemplateMessage(
-                alt_text="This is a buttons template",
-                template=buttons_template
-            )
-            line_bot_api.reply_message(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[template_message]
-                )
-            )
-        elif text == '文字':
+        if text == '文字':
             line_bot_api.reply_message(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
@@ -91,6 +66,27 @@ def handle_message(event):
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
                     messages=[StickerMessage(package_id="446", sticker_id="1988")]
+                )
+            )
+        elif text == '圖片':
+            url = request.url_root + '/static/Logo.jpg'
+            url = url.replace("http", "https")
+            app.logger.info("url=" + url)
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[
+                        ImageMessage(original_content_url=url, preview_image_url=url)
+                    ]
+                )
+            )
+        elif text == '位置':
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[
+                        LocationMessage(title='Location', address="Taipei", latitude=25.0475, longitude=121.5173)
+                    ]
                 )
             )
         else:
