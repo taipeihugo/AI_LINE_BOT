@@ -6,21 +6,16 @@ from linebot.v3.exceptions import (
     InvalidSignatureError
 )
 import linebot.v3.messaging *
-import linebot.v3.webhooks *
+from linebot.v3.webhooks import (
+    MessageEvent,
+    TextMessageContent
+)
 import os
-#Azure CLU
-from azure.core.credentials import AzureKeyCredential
-from azure.ai.language.conversations import ConversationAnalysisClient
-# clu_endpoint = os.getenv("ENDPOINT")
-# clu_key = os.getenv("API_KEY")
-# project_name = os.getenv("PROJECT_NAME")
-# deployment_name = os.getenv("DEPLOYMENT_NAME")  
 
 app = Flask(__name__)
 
 configuration = Configuration(access_token=os.getenv('CHANNEL_ACCESS_TOKEN'))
 line_handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
-
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -44,33 +39,12 @@ def callback():
 @line_handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
 
-
      
     text = event.message.text    
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
 
-        # Confirm Template
-        if text == 'Confirm':
-            confirm_template = ConfirmTemplate(
-                text='今天學程式了嗎?',
-                actions=[
-                    MessageAction(label='是', text='是!'),
-                    MessageAction(label='否', text='否!')
-                ]
-            )
-            template_message = TemplateMessage(
-                alt_text='Confirm alt text',
-                template=confirm_template
-            )
-            line_bot_api.reply_message(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[template_message]
-                )
-            )
-        # Buttons Template
-        elif text == 'Buttons':
+    if text == 'Buttons':
             url = request.url_root + '/static/Logo.jpg'
             url = url.replace("http", "https")
             app.logger.info("url=" + url)
@@ -95,50 +69,7 @@ def handle_message(event):
                     messages=[template_message]
                 )
             )
-        # Carousel Template
-        elif text == 'Carousel':
-            url = request.url_root + '/static/Logo.jpg'
-            url = url.replace("http", "https")
-            app.logger.info("url=" + url)
-            carousel_template = CarouselTemplate(
-                columns=[
-                    CarouselColumn(
-                        thumbnail_image_url=url,
-                        title='第一項',
-                        text='這是第一項的描述',
-                        actions=[
-                            URIAction(
-                                label='按我前往 Google',
-                                uri='https://www.google.com'
-                            )
-                        ]
-                    ),
-                    CarouselColumn(
-                        thumbnail_image_url=url,
-                        title='第二項',
-                        text='這是第二項的描述',
-                        actions=[
-                            URIAction(
-                                label='按我前往 Yahoo',
-                                uri='https://www.yahoo.com'
-                            )
-                        ]
-                    )
-                ]
-            )
-
-            carousel_message = TemplateMessage(
-                alt_text='這是 Carousel Template',
-                template=carousel_template
-            )
-
-            line_bot_api.reply_message(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages =[carousel_message]
-                )
-            )
-                
+                 
         elif text == '文字':
             line_bot_api.reply_message(
                 ReplyMessageRequest(
