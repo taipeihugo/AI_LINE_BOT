@@ -61,7 +61,7 @@ def handle_message(event):
                     messages=[TextMessage(text='$ LINE 表情符號 $', emojis=emojis)]
                 )
             )
-        elif text == '貼圖':
+        elif text == '貼圖':            
             line_bot_api.reply_message(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
@@ -69,6 +69,14 @@ def handle_message(event):
                 )
             )
         elif text == '圖片':
+
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[TextMessage(text=request.url_root)]
+                )
+            )
+            
             url = request.url_root + '/static/Logo.jpg'
             url = url.replace("http", "https")
             app.logger.info("url=" + url)
