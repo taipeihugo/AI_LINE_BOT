@@ -14,7 +14,10 @@ import os, requests, json
 
 app = Flask(__name__)
 
-configuration = Configuration(access_token=os.getenv('CHANNEL_ACCESS_TOKEN'))
+
+# configuration = Configuration(access_token=os.getenv('CHANNEL_ACCESS_TOKEN'))
+access_token = os.getenv('CHANNEL_ACCESS_TOKEN')
+configuration = Configuration(access_token)
 line_handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 
 @app.route("/callback", methods=['POST'])
@@ -42,7 +45,7 @@ def create_rich_menu_2():
 
         # Create rich menu
         headers = {
-            'Authorization': 'Bearer ' + CHANNEL_ACCESS_TOKEN,
+            'Authorization': 'Bearer ' + access_token,
             'Content-Type': 'application/json'
         }
         body = {
