@@ -41,10 +41,10 @@ import os
 #Azure CLU
 from azure.core.credentials import AzureKeyCredential
 from azure.ai.language.conversations import ConversationAnalysisClient
-clu_endpoint = os.getenv("ENDPOINT")
-clu_key = os.getenv("API_KEY")
-project_name = os.getenv("PROJECT_NAME")
-deployment_name = os.getenv("DEPLOYMENT_NAME")  
+# clu_endpoint = os.getenv("ENDPOINT")
+# clu_key = os.getenv("API_KEY")
+# project_name = os.getenv("PROJECT_NAME")
+# deployment_name = os.getenv("DEPLOYMENT_NAME")  
 
 app = Flask(__name__)
 
@@ -74,18 +74,6 @@ def callback():
 @line_handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
 
-    address = event.message.address
-    result = analyze_address(address)
-    entities = result['prediction']['entities']
-
-    messages = []
-    if len(entities) == 2 and entities[0]['category'] == 'city' and entities[1]['category'] == 'town':
-        city = result['prediction']['entities'][0]['text']
-        town = result['prediction']['entities'][1]['text']
-        messages.append(TextMessage(text=f"你傳送的位址資訊的城市:{city}"))
-        messages.append(TextMessage(text=f"你傳送的位址資訊的鄉鎮:{town}"))
-    else:
-        messages.append(TextMessage(text="無法辨識你傳送的位址資訊"))
 
      
     text = event.message.text    
@@ -214,31 +202,8 @@ def handle_message(event):
                 )
             )
 
-def analyze_address(address):
-    credential = AzureKeyCredential(clu_key)
-    client = ConversationAnalysisClient(clu_endpoint, credential)
-    with client:
-        result = client.analyze_conversation(
-            task={
-                "kind": "Conversation",
-                "analysisInput": {
-                    "conversationItem": {
-                        "participantId": "1",
-                        "id": "1",
-                        "modality": "text",
-                        "language": "zh-hant",
-                        "text": address
-                    },
-                    "isLoggingEnabled": False
-                },
-                "parameters": {
-                    "projectName": project_name,
-                    "deploymentName": deployment_name,
-                    "verbose": True
-                }
-            }
-        )
-    return result['result']
+
+
 
 if __name__ == "__main__":
     app.run()
