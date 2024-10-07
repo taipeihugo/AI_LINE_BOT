@@ -69,16 +69,8 @@ def handle_message(event):
                 )
             )
         elif text == '圖片':
-
-            line_bot_api.reply_message(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[TextMessage(text=request.url_root)]
-                )
-            )
-            
-            url = request.url_root + '/static/Logo.jpg'
-            url = url.replace("http", "https")
+             url = request.url_root + '/static/Logo.jpg'
+            # url = url.replace("http", "https")
             app.logger.info("url=" + url)
             line_bot_api.reply_message(
                 ReplyMessageRequest(
