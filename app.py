@@ -69,7 +69,7 @@ def handle_message(event):
                 )
             )
         elif text == '圖片':
-             url = request.url_root + '/static/Logo.jpg'
+            url = request.url_root + '/static/Logo.jpg'
             # url = url.replace("http", "https")
             app.logger.info("url=" + url)
             line_bot_api.reply_message(
