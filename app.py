@@ -10,7 +10,7 @@ from linebot.v3.webhooks import (
     MessageEvent,
     TextMessageContent
 )
-import os
+import os, requests, json
 
 app = Flask(__name__)
 
@@ -34,6 +34,116 @@ def callback():
         abort(400)
 
     return 'OK'
+
+def create_rich_menu_2():
+    with ApiClient(configuration) as api_client:
+        line_bot_api = MessagingApi(api_client)
+        line_bot_blob_api = MessagingApiBlob(api_client)
+
+        # Create rich menu
+        headers = {
+            'Authorization': 'Bearer ' + CHANNEL_ACCESS_TOKEN,
+            'Content-Type': 'application/json'
+        }
+        body = {
+            "size": {
+                "width": 2500,
+                "height": 1686
+            },
+            "selected": True,
+            "name": "圖文選單 1",
+            "chatBarText": "查看更多資訊",
+            "areas": [
+                {
+                    "bounds": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 833,
+                        "height": 843
+                    },
+                    "action": {
+                        "type": "message",
+                        "text": "A"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 834,
+                        "y": 0,
+                        "width": 833,
+                        "height": 843
+                    },
+                    "action": {
+                        "type": "message",
+                        "text": "B"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 1663,
+                        "y": 0,
+                        "width": 834,
+                        "height": 843
+                    },
+                    "action": {
+                        "type": "message",
+                        "text": "C"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 0,
+                        "y": 843,
+                        "width": 833,
+                        "height": 843
+                    },
+                    "action": {
+                        "type": "message",
+                        "text": "D"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 834,
+                        "y": 843,
+                        "width": 833,
+                        "height": 843
+                    },
+                    "action": {
+                        "type": "message",
+                        "text": "E"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 1662,
+                        "y": 843,
+                        "width": 838,
+                        "height": 843
+                    },
+                    "action": {
+                        "type": "message",
+                        "text": "F"
+                    }
+                }
+            ]
+        }
+
+        response = requests.post('https://api.line.me/v2/bot/richmenu', headers=headers, data=json.dumps(body).encode('utf-8'))
+        response = response.json()
+        print(response)
+        rich_menu_id = response["richMenuId"]
+        
+        # Upload rich menu image
+        with open('static/richmenu-1.jpg', 'rb') as image:
+            line_bot_blob_api.set_rich_menu_image(
+                rich_menu_id=rich_menu_id,
+                body=bytearray(image.read()),
+                _headers={'Content-Type': 'image/jpeg'}
+            )
+
+        line_bot_api.set_default_rich_menu(rich_menu_id)
+
 
 
 @line_handler.add(MessageEvent, message=TextMessageContent)
@@ -98,7 +208,7 @@ def handle_message(event):
             )
 
 
-
+create_rich_menu_2()
 
 if __name__ == "__main__":
     app.run()
