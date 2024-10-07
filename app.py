@@ -16,10 +16,9 @@ import json
 
 app = Flask(__name__)
 
-
-# configuration = Configuration(access_token=os.getenv('CHANNEL_ACCESS_TOKEN'))
 access_token = os.getenv('CHANNEL_ACCESS_TOKEN')
-configuration = Configuration(access_token)
+
+configuration = Configuration(access_token=os.getenv('CHANNEL_ACCESS_TOKEN'))
 line_handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 
 @app.route("/callback", methods=['POST'])
@@ -135,13 +134,19 @@ def create_rich_menu_2():
         }
 
         response = requests.post('https://api.line.me/v2/bot/richmenu', headers=headers, data=json.dumps(body).encode('utf-8'))
-        response = response.json()
-        print(response)
+        if response.status_code == 200:
+            response_data = response.json()
+            print(response_data)
+            rich_menu_id = response_data["richMenuId"]
+        else:
+            print(f"Error: {response.status_code}, {response.text}")
+            return
+
         rich_menu_id = response["richMenuId"]
         
         # Upload rich menu image
         with open('static/richmenu-1.jpg', 'rb') as image:
-            line_bot_blob_api.set_rich_menu_image(
+            line_bot_blob_api.MessagingApiBlob(
                 rich_menu_id=rich_menu_id,
                 body=bytearray(image.read()),
                 _headers={'Content-Type': 'image/jpeg'}
@@ -184,7 +189,7 @@ def handle_message(event):
                 )
             )
         elif text == '圖片':
-            url = request.url_root + '/static/Logo.jpg'
+            url = request.url_root + 'static/Logo.jpg'
             # url = url.replace("http", "https")
             app.logger.info("url=" + url)
             line_bot_api.reply_message(
@@ -213,7 +218,8 @@ def handle_message(event):
             )
 
 
-create_rich_menu_2()
+
 
 if __name__ == "__main__":
     app.run()
+    create_rich_menu_2()
