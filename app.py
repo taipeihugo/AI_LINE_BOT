@@ -5,32 +5,7 @@ from linebot.v3 import (
 from linebot.v3.exceptions import (
     InvalidSignatureError
 )
-from linebot.v3.messaging import (
-    Configuration,
-    ApiClient,
-    MessagingApi,
-    ReplyMessageRequest,
-    TextMessage,
-    Emoji, #L7
-    VideoMessage,
-    AudioMessage,
-    LocationMessage,
-    StickerMessage,
-    ImageMessage, #L7
-    TemplateMessage, #L8
-    ConfirmTemplate,
-    ButtonsTemplate,
-    CarouselTemplate,
-    CarouselColumn, #L8
-    QuickReply, #L11
-    QuickReplyItem,
-    PostbackAction,
-    MessageAction,
-    DatetimePickerAction,
-    CameraAction,
-    CameraRollAction,
-    LocationAction #L11
-)
+from linebot.v3.messaging import *
 from linebot.v3.webhooks import (
     MessageEvent,
     TextMessageContent,
