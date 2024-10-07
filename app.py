@@ -34,7 +34,8 @@ from linebot.v3.messaging import (
 from linebot.v3.webhooks import (
     MessageEvent,
     TextMessageContent,
-    PostbackEvent #
+    PostbackEvent,
+    LocationMessageContent
 )
 import os
 #Azure CLU
