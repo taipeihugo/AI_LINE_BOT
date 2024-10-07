@@ -10,7 +10,9 @@ from linebot.v3.webhooks import (
     MessageEvent,
     TextMessageContent
 )
-import os, requests, json
+import os
+import requests
+import json
 
 app = Flask(__name__)
 
