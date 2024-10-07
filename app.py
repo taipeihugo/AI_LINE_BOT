@@ -87,16 +87,7 @@ def handle_message(event):
     else:
         messages.append(TextMessage(text="無法辨識你傳送的位址資訊"))
 
-    with ApiClient(configuration) as api_client:
-        line_bot_api = MessagingApi(api_client)
-        line_bot_api.reply_message_with_http_info(
-            ReplyMessageRequest(
-                reply_token=event.reply_token,
-                messages=messages
-            )
-        )
-    
-    
+     
     text = event.message.text    
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
