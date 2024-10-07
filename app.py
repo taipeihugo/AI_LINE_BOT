@@ -6,13 +6,9 @@ from linebot.v3.exceptions import (
     InvalidSignatureError
 )
 from linebot.v3.messaging import *
-from linebot.v3.webhooks import (
-    MessageEvent,
-    TextMessageContent,
-    PostbackEvent,
-    LocationMessageContent
-)
-import os
+from linebot.v3.webhooks import *
+import os, json
+
 #Azure CLU
 from azure.core.credentials import AzureKeyCredential
 from azure.ai.language.conversations import ConversationAnalysisClient
