@@ -26,6 +26,8 @@ from linebot.v3.messaging import (
     QuickReplyItem,
     PostbackAction,
     MessageAction,
+    URIAction, #8
+    PostbackAction, #8
     DatetimePickerAction,
     CameraAction,
     CameraRollAction,
