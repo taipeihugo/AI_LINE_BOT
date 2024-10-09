@@ -100,9 +100,7 @@ def handle_message(event):
             line_bot_api.reply_message(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=[
-                        ImageMessage(original_content_url=img_url, preview_image_url=img_url)    
-                    ]
+                    ImageMessage(original_content_url=img_url, preview_image_url=img_url)
                 )
             )
         elif text == '地震':
@@ -146,7 +144,7 @@ def create_rich_menu_1():
                     width=833,
                     height=843
                 ),
-                action=MessageAction(text='地震')
+                action=MessageAction(text='文字')
             ),
             RichMenuArea(
                 bounds=RichMenuBounds(
