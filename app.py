@@ -95,14 +95,6 @@ def handle_message(event):
                     ]
                 )
             )
-        elif text == '雷達回波':
-            img_url = f'https://cwaopendata.s3.ap-northeast-1.amazonaws.com/Observation/O-A0058-001.png?{time.time_ns()}'
-            line_bot_api.reply_message(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    ImageMessage(original_content_url=img_url, preview_image_url=img_url)
-                )
-            )
         else:
             line_bot_api.reply_message(
                 ReplyMessageRequest(
