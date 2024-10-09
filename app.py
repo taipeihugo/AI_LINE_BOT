@@ -13,6 +13,7 @@ from linebot.v3.webhooks import (
 import os
 import requests
 import json
+import time
 
 app = Flask(__name__)
 
