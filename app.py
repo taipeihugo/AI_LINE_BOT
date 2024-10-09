@@ -217,8 +217,7 @@ def handle_message(event):
             )
 
 
-
+create_rich_menu_2()
 
 if __name__ == "__main__":
     app.run()
-    create_rich_menu_2()
