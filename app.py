@@ -10,6 +10,8 @@ from linebot.v3.webhooks import (
     MessageEvent,
     TextMessageContent
 )
+from linebot.models.send_messages import ImageSendMessage # 天氣
+
 import os
 import requests
 import json
