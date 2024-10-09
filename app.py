@@ -16,7 +16,6 @@ import json
 
 app = Flask(__name__)
 
-access_token = os.getenv('CHANNEL_ACCESS_TOKEN')
 
 configuration = Configuration(access_token=os.getenv('CHANNEL_ACCESS_TOKEN'))
 line_handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
@@ -46,7 +45,7 @@ def create_rich_menu_2():
 
         # Create rich menu
         headers = {
-            'Authorization': 'Bearer ' + access_token,
+            'Authorization': 'Bearer ' + CHANNEL_ACCESS_TOKEN,
             'Content-Type': 'application/json'
         }
         body = {
