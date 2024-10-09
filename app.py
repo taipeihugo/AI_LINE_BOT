@@ -162,7 +162,7 @@ def create_rich_menu_1():
                     width=833,
                     height=843
                 ),
-                action=MessageAction(text='文字')
+                action=MessageAction(text='雷達回波')
             ),
             RichMenuArea(
                 bounds=RichMenuBounds(
@@ -171,7 +171,7 @@ def create_rich_menu_1():
                     width=833,
                     height=843
                 ),
-                action=MessageAction(text='表情符號')
+                action=MessageAction(text='地震')
             ),
             RichMenuArea(
                 bounds=RichMenuBounds(
@@ -180,7 +180,7 @@ def create_rich_menu_1():
                     width=834,
                     height=843
                 ),
-                action=MessageAction(text='貼圖')
+                action=MessageAction(text='表情符號')
             ),
             RichMenuArea(
                 bounds=RichMenuBounds(
@@ -189,7 +189,7 @@ def create_rich_menu_1():
                     width=833,
                     height=843
                 ),
-                action=MessageAction(text='圖片')
+                action=MessageAction(text='貼圖') # 圖片
             ),
             RichMenuArea(
                 bounds=RichMenuBounds(
