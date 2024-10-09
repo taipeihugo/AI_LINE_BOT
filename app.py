@@ -96,7 +96,7 @@ def create_rich_menu_1():
                     width=834,
                     height=843
                 ),
-                action=MessageAction(text='F')
+                action=MessageAction(text='雷達回波')
             )
         ]
 
@@ -175,6 +175,16 @@ def handle_message(event):
                     reply_token=event.reply_token,
                     messages=[
                         LocationMessage(title='Location', address="Taipei", latitude=25.0475, longitude=121.5173)
+                    ]
+                )
+            )
+        elif text == '雷達回波':
+            img_url = f'https://cwaopendata.s3.ap-northeast-1.amazonaws.com/Observation/O-A0058-001.png?{time.time_ns()}'
+            line_bot_api.reply_message(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[
+                        ImageSendMessage(original_content_url=img_url, preview_image_url=img_url)
                     ]
                 )
             )
