@@ -108,7 +108,7 @@ def handle_message(event):
             )
         elif text == '地震':
             reply = earth_quake()  # 執行地震查詢函式
-            text_message = TextSendMessage(text=reply[0])  # 傳送地震報告內容
+            text_message = TextMessage(text=reply[0])  # 傳送地震報告內容
             line_bot_api.reply_message(reply_token, text_message)
             if reply[1]:  # 如果有地震圖片，則回傳
                 json_data = json.loads(event)
