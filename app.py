@@ -51,7 +51,7 @@ def create_rich_menu_1():
                     width=833,
                     height=843
                 ),
-                action=MessageAction(text='A')
+                action=MessageAction(text='文字')
             ),
             RichMenuArea(
                 bounds=RichMenuBounds(
@@ -60,7 +60,7 @@ def create_rich_menu_1():
                     width=833,
                     height=843
                 ),
-                action=MessageAction(text='B')
+                action=MessageAction(text='表情符號')
             ),
             RichMenuArea(
                 bounds=RichMenuBounds(
@@ -69,7 +69,7 @@ def create_rich_menu_1():
                     width=834,
                     height=843
                 ),
-                action=MessageAction(text='C')
+                action=MessageAction(text='貼圖')
             ),
             RichMenuArea(
                 bounds=RichMenuBounds(
@@ -78,7 +78,7 @@ def create_rich_menu_1():
                     width=833,
                     height=843
                 ),
-                action=MessageAction(text='D')
+                action=MessageAction(text='圖片')
             ),
             RichMenuArea(
                 bounds=RichMenuBounds(
@@ -87,7 +87,7 @@ def create_rich_menu_1():
                     width=833,
                     height=843
                 ),
-                action=MessageAction(text='E')
+                action=MessageAction(text='位置')
             ),
             RichMenuArea(
                 bounds=RichMenuBounds(
