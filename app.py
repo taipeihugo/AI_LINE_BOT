@@ -101,7 +101,7 @@ def handle_message(event):
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
                     messages=[
-                        ImageSendMessage(original_content_url=img_url, preview_image_url=img_url)    
+                        ImageMessage(original_content_url=img_url, preview_image_url=img_url)    
                     ]
                 )
             )
