@@ -186,6 +186,15 @@ def handle_message(event):
                 )
             )
 
+# 歡迎新成員加入的事件
+@line_handler.add(MemberJoinedEvent)
+def welcome(event):
+    uid = event.joined.members[0].user_id
+    gid = event.source.group_id
+    profile = line_bot_api.get_group_member_profile(gid, uid)
+    name = profile.display_name
+    message = TextSendMessage(text=f'{name} 歡迎加入')
+    line_bot_api.reply_message(event.reply_token, message)
 
 create_rich_menu_1()
 
